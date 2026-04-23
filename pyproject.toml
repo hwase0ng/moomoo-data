@@ -1,6 +1,6 @@
 [project]
 name = "moomoo-data"
-version = "0.1.0"
+version = "0.1.1"
 description = "Moomoo OpenD data provider for HKSE/KLSE markets with capital flow analysis"
 readme = "README.md"
 requires-python = ">=3.10"
