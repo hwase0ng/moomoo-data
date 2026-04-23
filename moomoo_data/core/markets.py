@@ -162,18 +162,3 @@ def get_default_index(ticker: str) -> str:
         )
         return ""
     return DEFAULT_INDEX.get(m, "")
-
-
-    Returns empty string for UNKNOWN or A_SHARE (not supported).
-    """
-    m = detect_market(ticker)
-    if m == Market.UNKNOWN:
-        logger.error(
-            f"[MarketDetector] Cannot get yfinance index for invalid ticker: '{ticker}'"
-        )
-        return ""
-    if m == Market.A_SHARE:
-        logger.warning(
-            f"[MarketDetector] A-share not supported, returning empty index for '{ticker}'"
-        )
-        return ""
