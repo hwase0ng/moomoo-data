@@ -28,11 +28,8 @@ pip install moomoo-data
 # Full installation with all features
 pip install moomoo-data[all]
 
-# SQLite caching
+# SQLite caching (recommended for production)
 pip install moomoo-data[cache]
-
-# Fallback providers
-pip install moomoo-data[yfinance,akshare]
 ```
 
 ## Requirements
@@ -96,8 +93,6 @@ MOOMOO_RATE_LIMIT_KLINE=20
 Supported formats:
 - **FinGenius**: `0700.HK`, `7088.KL`
 - **Moomoo**: `HK.00700`, `MY.07088`
-- **yfinance**: `0700.HK`, `7088.KL`
-- **akshare**: `00700`, `sh600000`
 
 The library automatically converts between formats.
 
@@ -127,25 +122,7 @@ print(f"Concentration (90%): {result['concentration_90']}%")
 print(f"Profit ratio: {result['profit_ratio']}%")
 ```
 
-## Provider Fallback
 
-When Moomoo is unavailable, the library automatically falls back to:
-
-1. **yfinance** - Institutional holders, historical data
-2. **akshare** - A-share capital flow, K-lines
-
-```python
-from moomoo_data.providers import ProviderRouter, MoomooProvider, YFinanceProvider
-
-router = ProviderRouter([
-    MoomooProvider(),
-    YFinanceProvider(),
-])
-
-# Automatically uses first available provider
-quote = router.get_capital_distribution("0700.HK")
-print(f"Data source: {quote['_provider']}")
-```
 
 ## Examples
 
@@ -155,7 +132,7 @@ See the `examples/` directory for:
 - `02_kline_analysis.py` - K-line data retrieval
 - `03_capital_flow.py` - Capital flow analysis
 - `04_chip_distribution.py` - Chip distribution visualization
-- `05_provider_fallback.py` - Provider fallback demo
+
 
 ## Documentation
 

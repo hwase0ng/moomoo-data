@@ -4,8 +4,6 @@ Ticker format conversion utilities.
 Supports bidirectional conversion between:
 - FinGenius format (internal standard): 0700.HK, 7088.KL
 - Moomoo format: HK.00700, MY.07088
-- akshare format: 00700, sh600000
-- yfinance format: 0700.HK, 7088.KL
 
 Examples:
     >>> fin_genius_to_moomoo('0700.HK')
@@ -102,74 +100,13 @@ def moomoo_to_fin_genius(ticker: str) -> str:
         return ticker
 
 
-def fin_genius_to_akshare(ticker: str) -> str:
-    """
-    Convert FinGenius ticker to akshare format.
-
-    Args:
-        ticker: FinGenius format ticker
-
-    Returns:
-        akshare format ticker
-
-    Examples:
-        '0700.HK' → '00700'
-        '600000' → 'sh600000'
-        '000001' → 'sz000001'
-    """
-    # HK stocks (akshare uses 5-digit code without suffix)
-    if ticker.endswith(".HK"):
-        return ticker.replace(".HK", "").zfill(5)
-
-    # A-shares (akshare uses lowercase prefix)
-    elif len(ticker) == 6 and ticker.isdigit():
-        if ticker.startswith("6"):
-            return f"sh{ticker}"
-        else:
-            return f"sz{ticker}"
-
-    else:
-        return ticker
-
-
-def akshare_to_fin_genius(code: str, market_hint: Optional[str] = None) -> str:
-    """
-    Convert akshare format to FinGenius.
-
-    Args:
-        code: akshare format code
-        market_hint: Optional hint for ambiguous cases ('hk', 'cn')
-
-    Returns:
-        FinGenius format ticker
-
-    Examples:
-        '00700' (HK) → '0700.HK'
-        'sh600000' → '600000'
-        'sz000001' → '000001'
-    """
-    # A-shares with prefix
-    if code.startswith(("sh", "sz")):
-        return code[2:]  # Remove prefix
-
-    # HK stocks (5-digit code)
-    elif code.isdigit() and len(code) == 5:
-        return f"{code}.HK"
-
-    # Need market hint for ambiguous cases
-    elif market_hint == "hk":
-        return f"{code}.HK"
-    else:
-        return code
-
-
 def validate_ticker_format(ticker: str, expected_source: str) -> bool:
     """
     Validate ticker format based on expected source.
 
     Args:
         ticker: Ticker string to validate
-        expected_source: Expected source ('fin_genius', 'moomoo', 'akshare', 'yfinance')
+        expected_source: Expected source ('fin_genius' or 'moomoo')
 
     Returns:
         True if format is valid, False otherwise
@@ -188,24 +125,6 @@ def validate_ticker_format(ticker: str, expected_source: str) -> bool:
     elif expected_source == "moomoo":
         # Market.Code format
         patterns = [r"^(HK|MY|SH|SZ|US|SG|JP|AU)\..+$"]
-        return any(re.match(p, ticker) for p in patterns)
-
-    elif expected_source == "akshare":
-        # 5-digit HK or sh/sz + 6 digits
-        patterns = [
-            r"^\d{5}$",  # HK
-            r"^sh\d{6}$",  # SH
-            r"^sz\d{6}$",  # SZ
-        ]
-        return any(re.match(p, ticker) for p in patterns)
-
-    elif expected_source == "yfinance":
-        # Similar to FinGenius
-        patterns = [
-            r"^\d{4,5}\.HK$",
-            r"^\d{4,5}\.KL$",
-            r"^[A-Z\.]+$",  # US stocks
-        ]
         return any(re.match(p, ticker) for p in patterns)
 
     return False
@@ -254,10 +173,8 @@ def detect_market(ticker: str) -> str:
         else:
             return "SZ"
 
-    # akshare format
-    elif ticker.startswith("sh"):
-        return "SH"
-    elif ticker.startswith("sz"):
-        return "SZ"
+    # Check for sh/sz prefix (legacy support)
+    elif ticker.startswith(("sh", "sz")):
+        return "SH" if ticker.startswith("sh") else "SZ"
 
     return "UNKNOWN"

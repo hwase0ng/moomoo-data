@@ -331,9 +331,7 @@ def analyze_chip_distribution(ticker: str) -> Optional[Dict[str, Any]]:
         missing_cols = [col for col in required_cols if col not in df.columns]
         if missing_cols:
             # Try to estimate turnover rate from volume
-            logger.warning(
-                f"Missing columns: {missing_cols}, attempting fallback calculation"
-            )
+            logger.warning(f"Missing columns: {missing_cols}")
             if "volume" in df.columns:
                 # Estimate turnover rate as volume / avg_volume * 0.01
                 avg_volume = df["volume"].mean()

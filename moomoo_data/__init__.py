@@ -6,13 +6,12 @@ and chip distribution analysis via Moomoo OpenD API.
 """
 
 from moomoo_data._version import __version__
+from moomoo_data.core.config import get_config, MoomooConfig
 
 # Core exports
 from moomoo_data.core.ticker import (
     fin_genius_to_moomoo,
     moomoo_to_fin_genius,
-    fin_genius_to_akshare,
-    akshare_to_fin_genius,
     validate_ticker_format,
     detect_market,
 )
@@ -46,8 +45,6 @@ __all__ = [
     # Ticker conversion
     "fin_genius_to_moomoo",
     "moomoo_to_fin_genius",
-    "fin_genius_to_akshare",
-    "akshare_to_fin_genius",
     "validate_ticker_format",
     "detect_market",
     # Market enum

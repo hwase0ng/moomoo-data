@@ -6,8 +6,6 @@ import pytest
 from moomoo_data.core.ticker import (
     fin_genius_to_moomoo,
     moomoo_to_fin_genius,
-    fin_genius_to_akshare,
-    akshare_to_fin_genius,
     validate_ticker_format,
     detect_market,
 )
@@ -63,39 +61,6 @@ class TestMoomooToFinGenius:
         assert moomoo_to_fin_genius("SZ.000001") == "000001"
 
 
-class TestFinGeniusToAkshare:
-    """Tests for fin_genius_to_akshare conversion."""
-
-    def test_hk(self):
-        """Test HK stock conversion."""
-        assert fin_genius_to_akshare("0700.HK") == "00700"
-
-    def test_a_share_shanghai(self):
-        """Test Shanghai A-share conversion."""
-        assert fin_genius_to_akshare("600519") == "sh600519"
-
-    def test_a_share_shenzhen(self):
-        """Test Shenzhen A-share conversion."""
-        assert fin_genius_to_akshare("000001") == "sz000001"
-
-
-class TestAkshareToFinGenius:
-    """Tests for akshare_to_fin_genius conversion."""
-
-    def test_a_share_with_prefix(self):
-        """Test A-share with prefix."""
-        assert akshare_to_fin_genius("sh600000") == "600000"
-        assert akshare_to_fin_genius("sz000001") == "000001"
-
-    def test_hk_five_digit(self):
-        """Test HK 5-digit code."""
-        assert akshare_to_fin_genius("00700") == "00700.HK"
-
-    def test_with_market_hint(self):
-        """Test with market hint."""
-        assert akshare_to_fin_genius("7088", market_hint="hk") == "7088.HK"
-
-
 class TestValidateTickerFormat:
     """Tests for ticker format validation."""
 
@@ -113,15 +78,10 @@ class TestValidateTickerFormat:
         assert validate_ticker_format("HK.00700", "moomoo") is True
         assert validate_ticker_format("MY.07088", "moomoo") is True
 
-    def test_akshare_format(self):
-        """Test akshare format."""
-        assert validate_ticker_format("00700", "akshare") is True
-        assert validate_ticker_format("sh600000", "akshare") is True
-
-    def test_yfinance_format(self):
-        """Test yfinance format."""
-        assert validate_ticker_format("0700.HK", "yfinance") is True
-        assert validate_ticker_format("AAPL", "yfinance") is True
+    def test_fin_genius_format(self):
+        """Test FinGenius format."""
+        assert validate_ticker_format("0700.HK", "fin_genius") is True
+        assert validate_ticker_format("7088.KL", "fin_genius") is True
 
     def test_invalid_format(self):
         """Test invalid format."""

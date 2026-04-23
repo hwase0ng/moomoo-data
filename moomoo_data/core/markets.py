@@ -110,12 +110,10 @@ def is_international(ticker: str) -> bool:
 # ------------------------------------------------------------------
 
 
-def normalize_ticker_for_yfinance(ticker: str) -> str:
-    """Normalise a ticker for yfinance consumption.
+def normalize_ticker_for_format(ticker: str) -> str:
+    """Normalise a ticker for API consumption.
 
-    * A-share tickers are returned as-is (yfinance cannot fetch A-shares).
-    * HK tickers with 5 digits and leading zeros are stripped to 4 digits
-      (yfinance quirk, same pattern as TradingAgents reference).
+    * HK tickers with 5 digits and leading zeros are stripped to 4 digits.
     * KL tickers are returned as-is.
     """
     t = ticker.strip().upper()
@@ -144,26 +142,14 @@ def get_market_label(ticker: str) -> str:
 # Index tickers
 # ------------------------------------------------------------------
 
-# Default index tickers per market for akshare (used by hot_money tool)
-# Note: A-share removed - not supported outside China
+# Default index tickers per market
 DEFAULT_INDEX = {
-    Market.HKSE: "HK_HSImain",  # Hang Seng Index (akshare format)
+    Market.HKSE: "HK_HSImain",  # Hang Seng Index
     Market.KLSE: "KLSE",  # FTSE Bursa Malaysia KLCI
-}
-
-# Yfinance index format (different from akshare)
-YFINANCE_INDEX = {
-    Market.HKSE: "^HSI",  # Hang Seng Index
-    Market.KLSE: "^KLSE",  # FTSE Bursa Malaysia KLCI
 }
 
 
 def get_default_index(ticker: str) -> str:
-    """
-    Return the default index ticker for the market that *ticker* belongs to (akshare format).
-
-    Returns empty string for UNKNOWN or A_SHARE (not supported).
-    """
     m = detect_market(ticker)
     if m == Market.UNKNOWN:
         logger.error(
@@ -178,10 +164,6 @@ def get_default_index(ticker: str) -> str:
     return DEFAULT_INDEX.get(m, "")
 
 
-def get_yfinance_index(ticker: str) -> str:
-    """
-    Return the yfinance-format index ticker for the market.
-
     Returns empty string for UNKNOWN or A_SHARE (not supported).
     """
     m = detect_market(ticker)
@@ -195,4 +177,3 @@ def get_yfinance_index(ticker: str) -> str:
             f"[MarketDetector] A-share not supported, returning empty index for '{ticker}'"
         )
         return ""
-    return YFINANCE_INDEX.get(m, "")
