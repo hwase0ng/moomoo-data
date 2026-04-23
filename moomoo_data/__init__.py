@@ -2,7 +2,7 @@
 Moomoo OpenD data provider for HKSE/KLSE markets.
 
 Provides real-time quotes, K-line data, capital flow analysis,
-and chip distribution analysis with automatic fallback.
+and chip distribution analysis via Moomoo OpenD API.
 """
 
 from moomoo_data._version import __version__

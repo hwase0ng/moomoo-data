@@ -12,7 +12,7 @@ A comprehensive Python library for accessing Moomoo OpenD API data, featuring:
 - 📊 **K-line data** (daily, weekly, monthly, intraday)
 - 💰 **Capital flow analysis** (super/big/mid/small order tracking)
 - 🎯 **Chip distribution analysis** (triangular distribution model)
-- 🔄 **Automatic fallback** to yfinance/akshare when Moomoo unavailable
+
 - 💾 **Built-in caching** (memory + SQLite)
 - ⚡ **Rate limiting** with configurable limits
 
