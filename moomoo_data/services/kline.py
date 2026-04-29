@@ -333,6 +333,10 @@ def _format_kline(data: pd.DataFrame, ticker: str, interval: str) -> pd.DataFram
         "close": "close",
         "volume": "volume",
         "turnover": "amount",
+        "pe_ratio": "pe_ratio",
+        "turnover_rate": "turnover_rate",
+        "change_rate": "change_rate",
+        "last_close": "last_close",
     }
 
     for src, dst in column_map.items():

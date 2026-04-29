@@ -1,6 +1,6 @@
 [project]
 name = "moomoo-data"
-version = "0.1.0"
+version = "0.2.0"
 description = "Moomoo OpenD data provider for HKSE/KLSE markets with capital flow analysis"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -37,7 +37,7 @@ dev = [
     "pytest>=7.4.0",
     "pytest-asyncio>=0.21.0",
     "pytest-cov>=4.1.0",
-    "ruff>=0.1.0",
+    "ruff>=0.2.0",
     "mypy>=1.5.0",
     "black>=23.0.0",
 ]
