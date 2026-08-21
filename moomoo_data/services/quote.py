@@ -39,7 +39,7 @@ def get_stock_quote(ticker: str) -> Optional[Dict[str, Any]]:
     try:
         # Import moomoo SDK
         try:
-            from moomoo import OpenQuoteContext, RET_OK
+            from moomoo import OpenQuoteContext, RET_OK, SubType
         except ImportError as e:
             logger.error(f"moomoo SDK not available: {e}")
             return None
@@ -61,6 +61,19 @@ def get_stock_quote(ticker: str) -> Optional[Dict[str, Any]]:
         ctx = OpenQuoteContext(host=config.host, port=config.port)
         try:
             ctx.start()
+
+            # Subscribe before requesting the quote. The Moomoo SDK requires a
+            # prior subscribe for QUOTE, otherwise get_stock_quote can hang.
+            # Subscription failures are non-fatal: we still attempt the quote so
+            # the caller's fallback (e.g. akshare on timeout) can trigger.
+            try:
+                ret_sub, _ = ctx.subscribe(
+                    [moomoo_ticker], [SubType.QUOTE], subscribe_push=False
+                )
+                if ret_sub != RET_OK:
+                    logger.warning(f"subscribe failed for {moomoo_ticker}")
+            except Exception as sub_err:
+                logger.warning(f"subscribe error for {moomoo_ticker}: {sub_err}")
 
             # Get quote
             ret, data = ctx.get_stock_quote([moomoo_ticker])

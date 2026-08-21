@@ -2,6 +2,13 @@
 
 All notable changes to `moomoo-data` will be documented in this file.
 
+## [0.2.1] - 2026-08-21
+
+### Fixed
+- `get_stock_quote` now subscribes (`SubType.QUOTE`) before calling
+  `get_stock_quote`, preventing the call from hanging when no prior
+  subscription exists. Subscription failures are non-fatal.
+
 ## [Unreleased]
 
 ### Added
